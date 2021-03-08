@@ -8,13 +8,11 @@ import HomePage from './pages/homepage/homepage.component';
 import ShopPage from './pages/shop/shop.component'
 import SignInAndSignUpPage from './pages/sign-in-and-sign-up/sign-in-and-sign-up.component';
 import CheckOutPage from './pages/checkout/checkout.component';
-import CollectionPage from './pages/collection/collection.component';
 
 import Header from './components/header/header.component'
 
 import { selectCurrentUser } from './redux/user/user.selector';
 import { setCurrentUser } from './redux/user/user.actions'
-
 import { createStructuredSelector } from 'reselect';
 
 
@@ -35,10 +33,9 @@ class App extends React.Component {
             ...snapShot.data()
           });
         });
-      } else {
-        setCurrentUser(userAuth);
       }
-    })
+      setCurrentUser(userAuth);
+    });
   }
 
   componentWillUnmount() {
@@ -64,7 +61,7 @@ class App extends React.Component {
 }
 
 const mapStateToProps = createStructuredSelector({
-  currentUser: selectCurrentUser
+  currentUser: selectCurrentUser,
 })
 
 const mapDispatchToProps = dispatch => ({
