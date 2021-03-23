@@ -13,8 +13,9 @@ import {
     emailSignInStart
 } from './user.actions';
 
-export function* getSnapshotFromUserAuth({ userAuth, aditionalData }) {
+export function* getSnapshotFromUserAuth(userAuth, aditionalData) {
     try {
+        console.log(userAuth)
         const userRef = yield call(createUserProfileDocument,
             userAuth,
             aditionalData);
@@ -40,9 +41,13 @@ export function* onGoogleSignInStart() {
 
 export function* emailSignIn({ payload: { email, password } }) {
     try {
+        console.log(email);
+        console.log(password);
         const { user } = yield auth.signInWithEmailAndPassword(email, password);
+        console.log(user);
         yield getSnapshotFromUserAuth(user);
     } catch (error) {
+        console.log(error)
         yield put(signInFailure(error));
     }
 }

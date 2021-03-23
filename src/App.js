@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import './App.css';
 import { Route, Switch, Redirect } from 'react-router-dom';
 import { auth, createUserProfileDocument } from './firebase/firebase.util'
@@ -16,47 +16,28 @@ import { checkUserSession } from './redux/user/user.actions';
 import { createStructuredSelector } from 'reselect';
 
 
-class App extends React.Component {
-
-
-  componentDidMount() {
-    const { checkUserSession } = this.props;
+const App = ({ checkUserSession, currentUser }) => {
+  useEffect(() => {
     checkUserSession();
-    // this.unsuscribeFromAuth = auth.onAuthStateChanged(async userAuth => {
-    //   if (userAuth) {
-    //     const userRef = await createUserProfileDocument(userAuth);
+  }, [currentUser]);
 
-    //     userRef.onSnapshot(snapShot => {
-    //       setCurrentUser({
-    //         id: snapShot.id,
-    //         ...snapShot.data()
-    //       });
-    //     });
-    //   }
-    //   setCurrentUser(userAuth);
-    // });
-  }
 
-  componentWillUnmount() {
-  }
+  return (
+    <div>
+      <Header />
+      <Switch>
+        <Route exact path='/' component={HomePage} />
+        <Route path='/shop' component={ShopPage} />
+        <Route exact path='/checkout' component={CheckOutPage} />
+        <Route exact path='/signin' render={() =>
+          currentUser ? (
+            <Redirect to='/' />) : <SignInAndSignUpPage />} />
+      </Switch>
 
-  render() {
-    return (
-      <div>
-        <Header />
-        <Switch>
-          <Route exact path='/' component={HomePage} />
-          <Route path='/shop' component={ShopPage} />
-          <Route exact path='/checkout' component={CheckOutPage} />
-          <Route exact path='/signin' render={() =>
-            this.props.currentUser ? (
-              <Redirect to='/' />) : <SignInAndSignUpPage />} />
-        </Switch>
-
-      </div >
-    );
-  }
+    </div >
+  );
 }
+
 
 const mapStateToProps = createStructuredSelector({
   currentUser: selectCurrentUser,
